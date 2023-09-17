@@ -19,6 +19,49 @@ class AvaliadorExpressoes {
 	}
 }
 
+//O que a janela final precisa receber como parâmetro:
+//matriz A, vetor X, vetor B
+//função objetiva
+//quantidade de restrições
+
+class Resultado extends JFrame{
+	JLabel teste = new JLabel("Segue o problema de otimização em sua forma padrão: ");
+	JLabel fo = new JLabel();
+	String tx = new String();
+	JLabel[] restricao = new JLabel[50];
+	JButton next = new JButton("Continuar");
+	Resultado(String funcao_obj, ArrayList<ArrayList<HashMap<String, Integer>>> matriz_coeficientes, ArrayList vetor_x, ArrayList vetor_b){
+		super("Forma padrão");
+		int tam = matriz_coeficientes.size() + 3;
+		setLayout(new GridLayout(tam,1));
+		add(teste);
+		fo.setText("min   " + funcao_obj + ", sujeito á: ");
+		add(fo);
+		for(int i = 0; i < matriz_coeficientes.size(); i++){
+			restricao[i] = new JLabel();
+			restricao[i].setText("");
+			tx = "";
+			for(int j = 0; j < matriz_coeficientes.get(i).size(); j++){
+				tx += matriz_coeficientes.get(i).get(j).get(vetor_x.get(j)) + "*" + vetor_x.get(j);
+				if(j != matriz_coeficientes.get(i).size() - 1)
+					tx += " + ";
+				
+			}
+			tx += "= " + vetor_b.get(i);
+			restricao[i].setText(tx);
+			add(restricao[i]);
+		}
+		
+		add(next);
+		setSize(400, 400);
+		setVisible(true);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+	}
+	
+
+}
+
+
 class Janela extends JFrame{
 	JPanel p1 = new JPanel();
 	JPanel p2 = new JPanel();
@@ -109,7 +152,7 @@ class Janela extends JFrame{
                     // Tenta converter o texto em um número inteiro
 					int numero = Integer.parseInt(resultado);
 					// Divide a expressao da restricao no tipo an*xn
-                    String partes[] = restricao.split("[+]");
+                    String partes[] = restricao.split("[+]|[-]");
                     // Define-se a quantidade de variaveis contidas na restrição
                     int quant_variaveis = partes.length;    
                     if(quant_restricoes == 0){
@@ -185,16 +228,32 @@ class Janela extends JFrame{
 				
 				System.out.println("MATRIZ A - RESTRICOES");
 				System.out.println("Tamanho: " + matriz_A.size());
+				//for(int i = 0; i < matriz_A.size(); i++){
+				//	System.out.println(matriz_A.get(i));
+				//}
 				for(int i = 0; i < matriz_A.size(); i++){
 					System.out.println(matriz_A.get(i));
+					for(int j = 0; j < matriz_A.get(i).size(); j++){
+						System.out.println(matriz_A.get(i).get(j).get(vetor_x.get(j)));
+						
+					}
 				}
+				
+				
 				System.out.println("---------------------------------------------------------------");
 				System.out.println("VETOR B - TERMOS INDEPENDENTES");
 				for(int i = 0; i < vetor_b.size(); i++){
 					System.out.println(vetor_b.get(i));
 				}
 				System.out.println("---------------------------------------------------------------");
+				dispose();
+				
+				
+				//configurando tela final
+				Resultado rs = new Resultado(funcao, matriz_A, vetor_x, vetor_b);
 			}
+			
+			
         });
 		setSize(600, 200);
 		setVisible(true);
